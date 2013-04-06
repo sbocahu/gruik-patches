@@ -1,0 +1,24 @@
+diff -ruN mutt-1.5.21.orig/sidebar.c mutt-1.5.21/sidebar.c
+--- mutt-1.5.21.orig/sidebar.c	2013-04-06 23:49:27.374660278 +0200
++++ mutt-1.5.21/sidebar.c	2013-04-06 23:55:11.850665641 +0200
+@@ -249,6 +249,7 @@
+ 		// calculate depth of current folder and generate its display name with indented spaces
+ 		int sidebar_folder_depth = 0;
+ 		char *sidebar_folder_name;
++		char *tmppath = strdup(tmp->path);
+ 		sidebar_folder_name = basename(tmp->path);
+ 		if ( maildir_is_prefix ) {
+ 			char *tmp_folder_name;
+@@ -265,6 +266,12 @@
+ 				strncat(sidebar_folder_name, basename(tmp->path), strlen(basename(tmp->path)) + sidebar_folder_depth);
+ 			}
+ 		}
++		if(strcmp(sidebar_folder_name, "  INBOX") == 0) {
++			char *tmp_name = basename(dirname(tmppath));
++			sidebar_folder_name = malloc(strlen(tmp_name)+1);
++			strcpy(sidebar_folder_name, tmp_name);
++		}
++		free(tmppath);
+ 		printw( "%.*s", SidebarWidth - delim_len + 1,
+ 			make_sidebar_entry(sidebar_folder_name, tmp->msgcount,
+ 			tmp->msg_unread, tmp->msg_flagged));
